@@ -1,7 +1,3 @@
-//
-// Created by zhouxi on 19/5/2020.
-//
-
 #ifndef CPPFILESENDER_FILESENDER_H
 #define CPPFILESENDER_FILESENDER_H
 

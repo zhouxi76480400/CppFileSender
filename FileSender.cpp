@@ -1,7 +1,3 @@
-//
-// Created by zhouxi on 19/5/2020.
-//
-
 #include "FileSender.h"
 
 #include <iostream>
@@ -57,7 +53,6 @@ FileSenderEnum sendFileByUDP(FileSenderConfig fileSenderConfig, void * data, uns
         //
         unsigned int all_waiting_send_data_length = length;
         unsigned int need_to_send_times = needToSendTimes(all_waiting_send_data_length, MAX_PAYLOAD_LENGTH);
-//        std::cout << "all_waiting_send_data_length: " << all_waiting_send_data_length << " need_to_send_times: " << need_to_send_times << std::endl;
         //
         unsigned int stop_flag_length = strlen(STOP_FLAG);  // length of stop_flag
         //
@@ -101,6 +96,7 @@ FileSenderEnum sendFileByUDP(FileSenderConfig fileSenderConfig, void * data, uns
         }
         free(verify_code);
         free(waiting_send_data);
+        return FileSenderEnum_SUCCESSFUL;
     }
     return FileSenderEnum_FAILED;
 }
