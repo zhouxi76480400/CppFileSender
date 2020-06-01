@@ -107,3 +107,41 @@ FileSenderEnum sendFileByUDP(FileSenderConfig fileSenderConfig, void * data, uns
     }
     return FileSenderEnum_FAILED;
 }
+
+ssize_t my_send_to(FileSenderConfig fileSenderConfig, const void * vo, size_t t) {
+    return sendto(fileSenderConfig.sock_fd,vo,t,0,(sockaddr *) &fileSenderConfig.client_address,sizeof(fileSenderConfig.client_address));
+}
+
+FileSenderEnum sendFileByUDP2(FileSenderConfig fileSenderConfig, void * data, unsigned int length) {
+    if(data != nullptr && length > 0 && fileSenderConfig.sock_fd >= 0) {
+        my_send_to(fileSenderConfig,START_FLAG,strlen(START_FLAG));
+        unsigned int times = needToSendTimes(length, MAX_PAYLOAD_LENGTH);
+        std::cout << "length:" << length << " times:" << times << std::endl;
+        for (int i = 0 ; i < times ; i ++) {
+            unsigned int start_offset = i * MAX_PAYLOAD_LENGTH;
+            unsigned int now_part_length = MAX_PAYLOAD_LENGTH;
+            bool isLastPacket = false;
+            if(times - i == 1) isLastPacket = true;
+            if(isLastPacket) now_part_length = length - start_offset;
+            //
+            size_t data_part_size = MAX_PAYLOAD_LENGTH * sizeof(uint8_t);
+            void * data_part = malloc(data_part_size);
+            memset(data_part,0,data_part_size);
+            memcpy(data_part,(char *) data + start_offset, now_part_length);
+            ssize_t is_ok = my_send_to(fileSenderConfig,data_part,now_part_length);
+            std::cout << is_ok << std::endl;
+            free(data_part);
+        }
+        my_send_to(fileSenderConfig,STOP_FLAG,strlen(STOP_FLAG));
+
+        return FileSenderEnum_SUCCESSFUL;
+    }
+    return FileSenderEnum_FAILED;
+}
+
+FileSenderEnum sendMessage(FileSenderConfig fileSenderConfig, const std::string str) {
+    if(fileSenderConfig.sock_fd >= 0) {
+        my_send_to(fileSenderConfig,str.c_str(), str.length());
+    }
+    return FileSenderEnum_FAILED;
+}

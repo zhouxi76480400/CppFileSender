@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <string>
 
 
 enum FileSenderEnum {
@@ -29,5 +30,9 @@ void init_sock_fd(FileSenderConfig * config);
 void release_sock_fd(FileSenderConfig * config);
 
 FileSenderEnum sendFileByUDP(FileSenderConfig fileSenderConfig, void * data, unsigned int length);
+
+FileSenderEnum sendFileByUDP2(FileSenderConfig fileSenderConfig, void * data, unsigned int length);
+
+FileSenderEnum sendMessage(FileSenderConfig fileSenderConfig, const std::string str);
 
 #endif //CPPFILESENDER_FILESENDER_H
