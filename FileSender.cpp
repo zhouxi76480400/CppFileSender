@@ -6,6 +6,9 @@
 #include <cstdio>
 #include <string>
 #include <sys/time.h>
+#include <cstring>
+
+#define OPEN_MAX 65535
 
 #define VERIFY_CODE_POOL "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
