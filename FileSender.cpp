@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
+#include <sys/time.h>
 
 #define VERIFY_CODE_POOL "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -38,11 +39,14 @@ unsigned int needToSendTimes(unsigned int all, unsigned int one) {
 void getVerifyCode(char * empty_char_buffer, int buffer_length) {
     memset(empty_char_buffer, 0, buffer_length);
     int pool_length = strlen(VERIFY_CODE_POOL);
-    srand((unsigned)time(NULL));
+    struct timeval tv;
+    struct timezone tz;
+    gettimeofday(&tv,&tz);
+    srand((unsigned)tv.tv_usec);
     for(int i = 0 ; i < buffer_length ; i ++) {
         int pos = rand() % pool_length;
         char c = VERIFY_CODE_POOL[pos];
-         memset(empty_char_buffer+i, c, 1);
+        memset(empty_char_buffer+i, c, 1);
     }
 }
 
