@@ -1,0 +1,36 @@
+#include <iostream>
+
+#include "UnixSocketClient.h"
+
+int main() {
+    size_t length = 1280 * 720 * 3 * sizeof(uint8_t);
+
+    UnixSocketClient client = UnixSocketClient();
+    int ret = client.createService();
+    if(ret >= 0) {
+        ret = client.connect();
+        if(ret == 0) {
+            bool isRun = 1;
+            int now_file_count = 0;
+            while (isRun) {
+                void * tmp_ptr = malloc(length);
+                memset(tmp_ptr,0,length);
+                int read_count = client.read(tmp_ptr,length);
+                std::cout << "read: " << read_count << std::endl;
+                if(read_count == 0) {
+                    std::cout << "EOF" << std::endl;
+                    isRun = 0;
+                } else if (read_count > 0) {
+                    now_file_count += read_count;
+
+                    if(now_file_count == length) {
+                        std::cout << "full file !" << std::endl;
+                        now_file_count = 0;
+                    }
+                }
+                free(tmp_ptr);
+            }
+        }
+    }
+    return 0;
+}
